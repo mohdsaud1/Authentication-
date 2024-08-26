@@ -21,8 +21,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build the project
-      run: npm run build  # Adjust this step if your project requires building
+    - name: Start the server
+      run: npm start  # Adjust this step if your project requires building
 
     - name: Deploy to Hostinger via SSH
       env:
