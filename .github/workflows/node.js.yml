@@ -1,0 +1,37 @@
+name: Deploy Node.js to Hostinger
+
+on:
+  push:
+    branches:
+      - master # Adjust to your branch name if needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Adjust the Node.js version as needed
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npm run build  # Adjust this step if your project requires building
+
+    - name: Deploy to Hostinger via SSH
+      env:
+        HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+        HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+        HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
+        HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+
+      run: |
+        sshpass -p $HOSTINGER_PASSWORD ssh -o StrictHostKeyChecking=no -p $HOSTINGER_PORT $HOSTINGER_USERNAME@$HOSTINGER_HOST 'mkdir -p ~/node-app'
+        sshpass -p $HOSTINGER_PASSWORD scp -o StrictHostKeyChecking=no -P $HOSTINGER_PORT -r * $HOSTINGER_USERNAME@$HOSTINGER_HOST:~/node-app
+        sshpass -p $HOSTINGER_PASSWORD ssh -o StrictHostKeyChecking=no -p $HOSTINGER_PORT $HOSTINGER_USERNAME@$HOSTINGER_HOST 'cd ~/node-app && npm install && pm2 restart all'
