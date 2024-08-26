@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/admin/userUpdate.css">
+    <title>Edit User</title>
+</head>
+<body>
+    <% if (user) { %>
+        <form id="userUpdate">
+            <h1>Update User</h1>
+            <input type="hidden" id="userId" name="userId" value="<%= user._id %>">
+            
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="<%= user.username %>">
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" value="<%= user.phone %>">
+            
+            <button type="submit">Update</button>
+        </form>
+        
+    <% } else { %>
+    <p>User data is not available.</p>
+    <% } %>
+
+    <script>
+        document.getElementById('userUpdate').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const userId = document.getElementById('userId').value;
+            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
+            fetch(`/admin/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username,phone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('User updated successfully');
+                window.location.href = '/admin/users';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating user');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/home.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact Us</a>
+        <a href="/admin/users">User Management</a>
+        <a href="/logout" style="float: right;">Logout</a>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to home page</h1>
+    </div>
+    <script>
+         function handleBackNavigation() {
+            if (window.performance && window.performance.navigation.type === 2) {
+                window.location.href = '/'; // Redirect to the initial page
+            }
+        }
+
+        // Add event listener for page show
+        window.addEventListener('pageshow', handleBackNavigation);
+
+        // Ensure redirect on unload
+        window.addEventListener('unload', function() {
+            // Redirect to the initial page
+            window.location.href = '/';
+        });
+
+       
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+
+<body>
+
+    <% if (typeof error !=='undefined' ) { %>
+        <p style="color:red;">
+            <%= error %>
+        </p>
+        <% } %>
+        <!-- action="/login" method="post" -->
+            <form id="login-form">
+                <h1>Login</h1>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+               
+                <button type="submit">Login</button>
+                <div class="account">
+                    <h6>Don't Have an Account?</h6>
+                    <a href="/signup">
+                        <h6>Create a New Account</h6>
+                    </a>
+
+
+                </div>
+
+                 <a href="/admin/login">Login as Admin</a>
+            </form>
+
+
+
+</body>
+<script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = e.target.username.value;
+      const password = e.target.password.value;
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          history.replaceState(null, '', '/home'); // Replace the current state
+          window.location.href = '/home'; // Redirect to the home page
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while trying to log in');
+      }
+    });
+  </script>
+
+</html>
